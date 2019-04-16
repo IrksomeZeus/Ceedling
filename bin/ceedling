@@ -61,11 +61,13 @@ unless (project_found)
         with_ignore = options[:with_ignore] || options[:withignore] || false
 
         ceedling_path     = File.join(name, 'vendor', 'ceedling')
-        source_path       = File.join(name, 'src')
-        test_path         = File.join(name, 'test')
-        test_support_path = File.join(name, 'test/support')
+        # source_path       = File.join(name, 'src')
+        # test_path         = File.join(name, 'test')
+        build_path        = File.join(name, 'build')
+        test_support_path = File.join(name, 'support')
 
-        [source_path, test_path, test_support_path].each do |d|
+        # [source_path, test_path, test_support_path].each do |d|
+        [build_path, test_support_path].each do |d|
           FileUtils.mkdir_p d
         end
 
@@ -130,9 +132,13 @@ unless (project_found)
 
         unless (no_configs)
           if as_gem
-            copy_file(File.join('assets', 'project_as_gem.yml'), File.join(name, 'project.yml'), :force => force)
+            # copy_file(File.join('assets', 'project_as_gem.yml'), File.join(name, 'project.yml'), :force => force)
+            copy_file(File.join('assets', 'pasa_project_as_gem.yml'), File.join(name, 'project.yml'), :force => force)
+            copy_file(File.join('assets', 'eclipse_project.project'), File.join(name, '.project'), :force => force)
           else
-            copy_file(File.join('assets', 'project_with_guts.yml'), File.join(name, 'project.yml'), :force => force)
+            # copy_file(File.join('assets', 'project_with_guts.yml'), File.join(name, 'project.yml'), :force => force)
+            copy_file(File.join('assets', 'pasa_project.yml'), File.join(name, 'project.yml'), :force => force)
+            copy_file(File.join('assets', 'eclipse_project.project'), File.join(name, '.project'), :force => force)
             if is_windows?
               copy_file(File.join('assets', 'ceedling.cmd'), File.join(name, 'ceedling.cmd'), :force => force)
             else

@@ -1,0 +1,161 @@
+---
+:project:
+  :use_exceptions: FALSE
+  :use_test_preprocessor: TRUE
+  :use_auxiliary_dependencies: TRUE
+  :generate_deep_dependencies: TRUE
+  :use_deep_dependencies: TRUE
+  :build_root: build
+  :test_file_prefix: test_
+  :which_ceedling: gem
+  :default_tasks:
+    - test:all
+
+:environment:
+  
+:extension:
+  :executable: .out
+
+:paths:
+  :test:
+    - +:./**
+    - -:./build/**
+    - -:./support/**
+  :support:
+    - +:./support/**
+  :source:
+    - ../bm_bsp/sys_lib/inc
+    - ../bm_bsp/sys_lib/src
+    - ../bm_bsp/inc/**
+    - ../bm_bsp/can_drv/generated_code
+    - ../bm_bsp/can_drv/BSW/*
+    - ../bm_bsp/can_drv/BSW/Il/
+    - ../bm_app_system/inc
+    - ../bm_app_system/src/**
+    - -:../bm_app_system/src/power_manager/module_manager/project/**
+    - -:../bm_app_system/src/power_manager/system_ctrl/mdl/**
+    - ../bm_app_audio/**
+    - ../bm_app_boot/**
+    - ../bm_app_scheduler/inc
+    - ../bm_app_networking/src/polling_manager
+    - ../bm_middleware/**
+    - -:../bm_middleware/src/timer_task/project/**
+    - -:../bm_middleware/src/hw_timer_manager/project/**
+    - -:../bm_middleware/src/nvm/nvm_data_config/**
+    - -:../bm_middleware/src/nvm/generated/eeprom_16kbit/**
+    - ../bm_app_can/*
+    - ../bm_app_vehicle/src/**
+    - ../bm_app_vehicle/inc/**
+    - ../bm_bsp/hw_pwr_ctrl
+    - ../bm_bsp/mcal/include
+    - ../bm_bsp/mcal/i2c/include
+    - ../bm_bsp/mcal/dma/Include
+    - ../bm_bsp/mcal/uart/include
+    - ../bm_bsp/mcal/adc/include
+    - ../bm_bsp/mcal/port/include
+    - ../bm_bsp/mcal/dio/dio_pp1/include
+    - ../bm_bsp/mcal/eeprom/include
+    - ../bm_bsp/mcal/lin/include
+    - ../bm_bsp/mcal/spi/include
+    - ../bm_bsp/mcal/wdg/include
+    - ../bm_bsp/mcal/pwm/include
+    - ../bm_bsp/mcal/mcu/include
+    - ../bm_bsp/mcal/icu/include
+    - ../bm_bsp/mcal/gpt/include
+    - ../bm_bsp/mcal/fls/include
+    - ../bm_bsp/os/src
+    - ../bm_bsp/os/inc
+    - ../bm_bsp/test_task
+    - ../bm_bsp/os/src/osek_src
+    - ../bm_bsp/os/src/generated_code
+    - ../bm_bsp/debug
+
+:defines:
+  # in order to add common defines:
+  #  1) remove the trailing [] from the :common: section
+  #  2) add entries to the :common: section (e.g. :test: has __UNITTEST__ defined)
+  :commmon: &common_defines []
+  :test:
+    - *common_defines
+    - __UNITTEST__
+    - __ghs__
+    - __V800_registermode=22
+    - BOARD=RH850_PP1
+    - _4S_HW_
+    - LK_DEBUG=1
+    - __ghs_board_is_v800_generic
+    - C_CPUTYPE_32BIT
+    - V_COMP_GHS_RH850
+    - C_CPUTYPE_BITORDER_LSB2MSB
+    - IL_ENABLE_RX
+    - IL_ENABLE_TX
+  :test_preprocess:
+    - *common_defines
+    - __UNITTEST__
+    
+:cmock:
+  :mock_prefix: mock_
+  :when_no_prototypes: :warn
+  :enforce_strict_ordering: TRUE
+  :plugins:
+    - :ignore
+    - :callback
+    - :expect_any_args
+    - :array
+    - :ignore_arg
+    - :return_thru_ptr
+  :treat_as:
+    uint8:    HEX8
+    uint16:   HEX16
+    uint32:   UINT32
+    int8:     INT8
+    bool:     UINT8
+  :treat_externs: :include
+  :strippables: 
+    - '(?:functionName\s*\(+.*?\)+)'
+  :includes:
+    - sys_types.h
+    
+:gcov:
+    :html_report_type: detailed
+
+#:tools:
+# Ceedling defaults to using gcc for compiling, linking, etc.
+# As [:tools] is blank, gcc will be used (so long as it's in your system path)
+# See documentation to configure a given toolchain for use
+# :tools:
+  # :test_compiler:
+    # :executable: ccv850
+    # :arguments:
+      # - -c
+      # - -MD
+      # - -I"$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
+      # - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
+      # - -D"$": COLLECTION_DEFINES_TEST_AND_VENDOR
+      # - --implicit_include
+      # - ${1}
+      # - -o ${2}
+
+# LIBRARIES
+# These libraries are automatically injected into the build process. Those specified as
+# common will be used in all types of builds. Otherwise, libraries can be injected in just
+# tests or releases. These options are MERGED with the options in supplemental yaml files.
+:libraries:
+  :placement: :end
+  :flag: "${1}"  # or "-L ${1}" for example
+  :common: &common_libraries []
+  :test:
+    - *common_libraries
+  :release:
+    - *common_libraries
+
+:plugins:
+  :load_paths:
+    - "#{Ceedling.load_path}"
+  :enabled:
+    - stdout_pretty_tests_report
+    - module_generator
+    - raw_output_report
+    - xml_tests_report
+    - gcov
+...

@@ -4,7 +4,7 @@ require "ceedling/version"
 require 'date'
 
 Gem::Specification.new do |s|
-  s.name        = "ceedling"
+  s.name        = "pasa_ceedling"
   s.version     = Ceedling::Version::GEM
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Mike Karlesky, Mark VanderVoord", "Greg Williams", "Matt Fletcher"]

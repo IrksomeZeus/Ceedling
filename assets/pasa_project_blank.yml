@@ -61,7 +61,9 @@
     - '(?:functionName\s*\(+.*?\)+)'
     
 :gcov:
-    :html_report_type: detailed
+  :html_report: true
+  :html_report_type: detailed
+  :xml_report: true
 
 #:tools:
 # Ceedling defaults to using gcc for compiling, linking, etc.
@@ -97,9 +99,8 @@
   :load_paths:
     - vendor/ceedling/plugins
   :enabled:
-    - stdout_pretty_tests_report
-    - module_generator
-    - raw_output_report
-    - xml_tests_report
-    - gcov
+  - stdout_gtestlike_tests_report
+  - module_generator
+  - junit_tests_report
+  - gcov
 ...
